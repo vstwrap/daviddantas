@@ -43,6 +43,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #F9FAFB;
         }
+        .hidden { display: none; }
         .tab-button {
             padding: 0.75rem 1.5rem;
             margin-right: 0.25rem;
@@ -200,216 +201,281 @@
         <symbol id="icon-save" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></symbol>
         <symbol id="icon-plus" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4V4a1 1 0 011-1z" clip-rule="evenodd" /></symbol>
         <symbol id="icon-export" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 7.414V13a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></symbol>
+        <symbol id="icon-logout" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V5.414l7.293 7.293a1 1 0 001.414-1.414L5.414 4H15a1 1 0 100-2H4a1 1 0 00-1 1z" clip-rule="evenodd" /></symbol>
     </svg>
 
-    <div class="container mx-auto max-w-full">
-        <header class="mb-6 md:mb-8">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-darkest mb-1">Painel de Relatório de Lojas</h1>
-            <p class="text-neutral-darker text-md" id="competenciaInfo">Competência Analisada: Carregando...</p>
-            <div class="mt-2 text-xs text-neutral-dark">
-                <span>User ID: <span id="userIdDisplay" class="font-medium">Carregando...</span></span> |
-                <span>App ID: <span id="appIdDisplay" class="font-medium">Carregando...</span></span>
-            </div>
-        </header>
-
-        <div class="mb-6 border-b border-neutral-medium">
-            <button class="tab-button active" onclick="openTab(event, 'dashboardGeral')">Dashboard Geral</button>
-            <button class="tab-button" onclick="openTab(event, 'desempenhoOperacional')">Desempenho Detalhado</button>
-            <button class="tab-button" onclick="openTab(event, 'analiseComparativa')">Análise Comparativa</button>
-            <button class="tab-button" onclick="openTab(event, 'cadastroConfiguracoes')">Cadastro e Configurações</button>
-        </div>
-
-        <div id="dashboardGeral" class="tab-content active">
-            <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Visão Geral de Performance (Mês Atual)</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" id="kpi-container"></div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div class="lg:col-span-2 card">
-                    <h3 class="text-lg font-semibold text-neutral-darkest mb-4">Faturamento Mensal (Últimos 6 Meses)</h3>
-                    <div class="chart-container"><canvas id="chartFaturamentoMensal"></canvas></div>
-                </div>
-                <div class="card">
-                    <h3 class="text-lg font-semibold text-neutral-darkest mb-4">Faturamento por Loja (Mês Atual)</h3>
-                    <div class="chart-container"><canvas id="chartFaturamentoPorLoja"></canvas></div>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div class="card">
-                    <div class="card-header">
-                         <h3 class="text-lg font-semibold text-neutral-darkest">Ranking de Lojas por Faturamento (Mês Atual)</h3>
-                         <button id="exportRankingLojas" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
+    <!-- Authentication Container -->
+    <div id="auth-container" class="min-h-screen flex items-center justify-center bg-neutral-lightest">
+        <div class="w-full max-w-md">
+            <div id="login-view">
+                <div class="card p-8">
+                    <h2 class="text-2xl font-bold text-center text-neutral-darkest mb-6">Login</h2>
+                    <form id="login-form" class="space-y-4">
+                        <div><label for="login-email" class="block text-sm font-medium text-neutral-darker">Email</label><input type="email" id="login-email" class="form-input mt-1" required></div>
+                        <div><label for="login-password" class="block text-sm font-medium text-neutral-darker">Palavra-passe</label><input type="password" id="login-password" class="form-input mt-1" required></div>
+                        <button type="submit" class="btn btn-primary w-full">Entrar</button>
+                    </form>
+                    <div class="text-center mt-4 text-sm">
+                        <a href="#" id="show-reset-view" class="font-medium text-brand-blue hover:text-brand-blue-dark">Esqueceu a palavra-passe?</a>
                     </div>
-                    <div class="overflow-x-auto">
+                </div>
+                <div class="text-center mt-4 text-sm">
+                    <p>Não tem uma conta? <a href="#" id="show-register-view" class="font-medium text-brand-blue hover:text-brand-blue-dark">Registe-se</a></p>
+                </div>
+            </div>
+
+            <div id="register-view" class="hidden">
+                 <div class="card p-8">
+                    <h2 class="text-2xl font-bold text-center text-neutral-darkest mb-6">Criar Conta</h2>
+                    <form id="register-form" class="space-y-4">
+                        <div><label for="register-email" class="block text-sm font-medium text-neutral-darker">Email</label><input type="email" id="register-email" class="form-input mt-1" required></div>
+                        <div><label for="register-password" class="block text-sm font-medium text-neutral-darker">Palavra-passe</label><input type="password" id="register-password" class="form-input mt-1" required></div>
+                         <button type="submit" class="btn btn-primary w-full">Registar</button>
+                    </form>
+                </div>
+                <div class="text-center mt-4 text-sm">
+                    <p>Já tem uma conta? <a href="#" id="show-login-view-from-register" class="font-medium text-brand-blue hover:text-brand-blue-dark">Faça login</a></p>
+                </div>
+            </div>
+
+            <div id="reset-view" class="hidden">
+                <div class="card p-8">
+                    <h2 class="text-2xl font-bold text-center text-neutral-darkest mb-6">Redefinir Palavra-passe</h2>
+                    <form id="reset-form" class="space-y-4">
+                        <div><label for="reset-email" class="block text-sm font-medium text-neutral-darker">Email</label><input type="email" id="reset-email" class="form-input mt-1" required></div>
+                        <button type="submit" class="btn btn-primary w-full">Enviar Link de Redefinição</button>
+                    </form>
+                </div>
+                 <div class="text-center mt-4 text-sm">
+                    <a href="#" id="show-login-view-from-reset" class="font-medium text-brand-blue hover:text-brand-blue-dark">Voltar ao Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Email Verification Container -->
+    <div id="email-verification-container" class="hidden min-h-screen flex items-center justify-center bg-neutral-lightest">
+        <div class="w-full max-w-md text-center card p-8">
+            <h2 class="text-2xl font-bold text-neutral-darkest mb-4">Verifique o seu E-mail</h2>
+            <p class="text-neutral-darker mb-6">Enviámos um link de verificação para o seu e-mail. Por favor, clique no link para ativar a sua conta. Se não o recebeu, verifique a sua pasta de spam.</p>
+            <button id="resend-verification-btn" class="btn btn-secondary">Reenviar E-mail de Verificação</button>
+            <button id="verification-logout-btn" class="btn btn-danger mt-4">Sair</button>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="hidden">
+        <div class="container mx-auto max-w-full">
+            <header class="mb-6 md:mb-8 flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-darkest mb-1">Painel de Relatório de Lojas</h1>
+                    <p class="text-neutral-darker text-md" id="competenciaInfo">Competência Analisada: Carregando...</p>
+                    <div class="mt-2 text-xs text-neutral-dark">
+                        <span>User Email: <span id="userEmailDisplay" class="font-medium">Carregando...</span></span>
+                    </div>
+                </div>
+                <button id="logout-btn" class="btn btn-secondary"><svg class="icon-md mr-2"><use href="#icon-logout"></use></svg>Sair</button>
+            </header>
+
+            <div class="mb-6 border-b border-neutral-medium">
+                <button class="tab-button active" onclick="openTab(event, 'dashboardGeral')">Dashboard Geral</button>
+                <button class="tab-button" onclick="openTab(event, 'desempenhoOperacional')">Desempenho Detalhado</button>
+                <button class="tab-button" onclick="openTab(event, 'analiseComparativa')">Análise Comparativa</button>
+                <button class="tab-button" onclick="openTab(event, 'cadastroConfiguracoes')">Cadastro e Configurações</button>
+            </div>
+
+            <div id="dashboardGeral" class="tab-content active">
+                <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Visão Geral de Performance (Mês Atual)</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" id="kpi-container"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2 card">
+                        <h3 class="text-lg font-semibold text-neutral-darkest mb-4">Faturamento Mensal (Últimos 6 Meses)</h3>
+                        <div class="chart-container"><canvas id="chartFaturamentoMensal"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-lg font-semibold text-neutral-darkest mb-4">Faturamento por Loja (Mês Atual)</h3>
+                        <div class="chart-container"><canvas id="chartFaturamentoPorLoja"></canvas></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div class="card">
+                        <div class="card-header">
+                             <h3 class="text-lg font-semibold text-neutral-darkest">Ranking de Lojas por Faturamento (Mês Atual)</h3>
+                             <button id="exportRankingLojas" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full table-auto">
+                                <thead><tr><th>#</th><th>Loja</th><th>Faturamento</th></tr></thead>
+                                <tbody id="rankingLojasBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-lg font-semibold text-neutral-darkest mb-4">Melhores e Piores Dias (Faturamento no Mês Atual)</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-brand-green mb-2 text-center">Top 5 Dias</h4>
+                                <ul id="topDiasList" class="space-y-1"></ul>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-brand-red mb-2 text-center">Piores 5 Dias</h4>
+                                <ul id="pioresDiasList" class="space-y-1"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="desempenhoOperacional" class="tab-content">
+                <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Desempenho Operacional Detalhado</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 p-4 bg-neutral-lightest border border-neutral-medium rounded-lg">
+                    <div>
+                        <label for="filtroLojaAba1" class="block text-sm font-medium text-neutral-darker mb-1">Filtrar por Loja:</label>
+                        <select id="filtroLojaAba1" class="form-select"><option value="todas">Todas as Lojas</option></select>
+                    </div>
+                    <div>
+                        <label for="filtroPeriodoAba1Inicio" class="block text-sm font-medium text-neutral-darker mb-1">Data Início:</label>
+                        <input type="date" id="filtroPeriodoAba1Inicio" class="form-input">
+                    </div>
+                     <div>
+                        <label for="filtroPeriodoAba1Fim" class="block text-sm font-medium text-neutral-darker mb-1">Data Fim:</label>
+                        <input type="date" id="filtroPeriodoAba1Fim" class="form-input">
+                    </div>
+                </div>
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 1.1: Resumo dos Indicadores Chave</h3>
+                            <p class="text-sm text-neutral-dark">Período selecionado vs. período anterior equivalente</p>
+                        </div>
+                        <button id="exportDashboard1_1" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
+                    </div>
+                    <div id="dashboard1_1_content" class="overflow-x-auto">
                         <table class="w-full table-auto">
-                            <thead><tr><th>#</th><th>Loja</th><th>Faturamento</th></tr></thead>
-                            <tbody id="rankingLojasBody"></tbody>
+                            <thead><tr><th>Indicador</th><th>Período Selecionado</th><th>Período Anterior</th><th>Variação (Absoluta)</th><th>Variação (%)</th></tr></thead>
+                            <tbody id="kpiTableBody"></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="card">
-                    <h3 class="text-lg font-semibold text-neutral-darkest mb-4">Melhores e Piores Dias (Faturamento no Mês Atual)</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <h4 class="font-semibold text-brand-green mb-2 text-center">Top 5 Dias</h4>
-                            <ul id="topDiasList" class="space-y-1"></ul>
-                        </div>
+                <div class="card mb-6">
+                     <div class="card-header">
                          <div>
-                            <h4 class="font-semibold text-brand-red mb-2 text-center">Piores 5 Dias</h4>
-                            <ul id="pioresDiasList" class="space-y-1"></ul>
+                            <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 1.2: Evolução Diária dos Indicadores</h3>
+                            <p class="text-sm text-neutral-dark">Dados do período selecionado</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Atendimentos e Vendas Totais por Dia</h4>
+                            <div class="chart-container"><canvas id="chartAtendimentosVendasDia"></canvas></div>
+                        </div>
+                        <div>
+                            <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Total Vendido (R$) por Dia</h4>
+                            <div class="chart-container"><canvas id="chartTotalVendidoDia"></canvas></div>
+                        </div>
+                    </div>
+                     <div class="mt-6">
+                        <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Composição das Vendas por Dia (Vinculadas vs. Não Vinculadas)</h4>
+                        <div class="chart-container" style="height: 350px;"><canvas id="chartComposicaoVendasDia"></canvas></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 1.3: Tabela Detalhada - Dados Diários</h3>
+                            <p class="text-sm text-neutral-dark">Dados do período selecionado</p>
+                        </div>
+                        <button id="exportDashboard1_3" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead><tr><th>Dia</th><th>Qtd Atendimentos</th><th>Vendas Vinculadas (Qtd)</th><th>Qtd Total de Vendas</th><th>Total Vendido (R$)</th><th>Ticket Médio Diário (R$)</th><th>Taxa de Conversão Diária (%)</th></tr></thead>
+                            <tbody id="tabelaDadosDiariosBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analiseComparativa" class="tab-content">
+                 <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Análise Comparativa Mensal e Indicadores de Eficiência</h2>
+                <div class="mb-6 p-4 bg-neutral-lightest border border-neutral-medium rounded-lg md:w-1/2 lg:w-1/3">
+                    <label for="filtroLojaAba2" class="block text-sm font-medium text-neutral-darker mb-1">Filtrar por Loja:</label>
+                    <select id="filtroLojaAba2" class="form-select"><option value="todas">Todas as Lojas</option></select>
+                </div>
+                 <div class="card mb-6">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 2.1: Comparativo de Performance Mensal Chave</h3>
+                            <p class="text-sm text-neutral-dark">Mês Atual (Completo) vs. Mês Anterior (Completo)</p>
+                        </div>
+                         <button id="exportDashboard2_1" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead><tr><th>Indicador</th><th>Mês Atual (Completo)</th><th>Mês Anterior (Completo)</th><th>Crescimento/Variação (Absoluto)</th><th>Crescimento/Variação (%)</th></tr></thead>
+                            <tbody id="comparativoMensalTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <div><h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 2.2: Visualização Gráfica do Comparativo Mensal</h3></div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Faturamento (R$)</h4>
+                            <div class="chart-container"><canvas id="chartComparativoFaturamento"></canvas></div>
+                        </div>
+                        <div>
+                            <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Taxa de Conversão (%)</h4>
+                            <div class="chart-container"><canvas id="chartComparativoConversao"></canvas></div>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Valor Médio da Venda (Ticket Médio R$)</h4>
+                            <div class="chart-container" style="height: 350px;"><canvas id="chartComparativoTicketMedio"></canvas></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="desempenhoOperacional" class="tab-content">
-            <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Desempenho Operacional Detalhado</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 p-4 bg-neutral-lightest border border-neutral-medium rounded-lg">
-                <div>
-                    <label for="filtroLojaAba1" class="block text-sm font-medium text-neutral-darker mb-1">Filtrar por Loja:</label>
-                    <select id="filtroLojaAba1" class="form-select"><option value="todas">Todas as Lojas</option></select>
-                </div>
-                <div>
-                    <label for="filtroPeriodoAba1Inicio" class="block text-sm font-medium text-neutral-darker mb-1">Data Início:</label>
-                    <input type="date" id="filtroPeriodoAba1Inicio" class="form-input">
-                </div>
-                 <div>
-                    <label for="filtroPeriodoAba1Fim" class="block text-sm font-medium text-neutral-darker mb-1">Data Fim:</label>
-                    <input type="date" id="filtroPeriodoAba1Fim" class="form-input">
-                </div>
-            </div>
-            <div class="card mb-6">
-                <div class="card-header">
-                    <div>
-                        <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 1.1: Resumo dos Indicadores Chave</h3>
-                        <p class="text-sm text-neutral-dark">Período selecionado vs. período anterior equivalente</p>
+            <div id="cadastroConfiguracoes" class="tab-content">
+                <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Cadastro e Configurações</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-neutral-darkest">3.1 Cadastro de Lojas</h3>
+                            <button id="btnNovaLoja" class="btn btn-sm btn-primary"><svg class="icon-sm"><use href="#icon-plus"></use></svg>Nova Loja</button>
+                        </div>
+                        <form id="formCadastroLoja" class="space-y-4">
+                            <div><label for="lojaNome" class="block text-sm font-medium text-neutral-darker">Nome da Loja:</label><input type="text" id="lojaNome" name="lojaNome" class="form-input mt-1" required></div>
+                            <div><label for="lojaRegiao" class="block text-sm font-medium text-neutral-darker">Região/Cidade:</label><input type="text" id="lojaRegiao" name="lojaRegiao" class="form-input mt-1"></div>
+                            <div><label for="lojaGerente" class="block text-sm font-medium text-neutral-darker">Gerente Responsável:</label><input type="text" id="lojaGerente" name="lojaGerente" class="form-input mt-1"></div>
+                            <input type="hidden" id="lojaId" name="lojaId">
+                            <button type="submit" class="btn btn-primary w-full"><svg class="icon-sm"><use href="#icon-save"></use></svg>Salvar Loja</button>
+                        </form>
+                        <hr class="my-6 border-neutral-medium">
+                        <h4 class="text-lg font-medium text-neutral-darkest mb-3">Lojas Cadastradas</h4>
+                        <div id="listaLojas" class="max-h-96 overflow-y-auto space-y-2"><p class="text-center text-neutral-dark p-4">Carregando lojas...</p></div>
                     </div>
-                    <button id="exportDashboard1_1" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
-                </div>
-                <div id="dashboard1_1_content" class="overflow-x-auto">
-                    <table class="w-full table-auto">
-                        <thead><tr><th>Indicador</th><th>Período Selecionado</th><th>Período Anterior</th><th>Variação (Absoluta)</th><th>Variação (%)</th></tr></thead>
-                        <tbody id="kpiTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card mb-6">
-                 <div class="card-header">
-                     <div>
-                        <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 1.2: Evolução Diária dos Indicadores</h3>
-                        <p class="text-sm text-neutral-dark">Dados do período selecionado</p>
+                    <div class="card">
+                         <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-neutral-darkest">3.2 Registro de Dados Diários</h3>
+                            <button id="btnNovoRegistro" class="btn btn-sm btn-primary"><svg class="icon-sm"><use href="#icon-plus"></use></svg>Novo Registro</button>
+                        </div>
+                        <form id="formRegistroDiario" class="space-y-4">
+                            <div><label for="registroData" class="block text-sm font-medium text-neutral-darker">Data:</label><input type="date" id="registroData" name="registroData" class="form-input mt-1" required></div>
+                            <div><label for="registroLojaId" class="block text-sm font-medium text-neutral-darker">Loja:</label><select id="registroLojaId" name="registroLojaId" class="form-select mt-1" required><option value="">Selecione uma loja</option></select></div>
+                            <div><label for="registroAtendimentos" class="block text-sm font-medium text-neutral-darker">Qtd Atendimentos:</label><input type="number" id="registroAtendimentos" name="registroAtendimentos" class="form-input mt-1" min="0" required></div>
+                            <div><label for="registroVendasVinculadas" class="block text-sm font-medium text-neutral-darker">Vendas Vinculadas (Qtd):</label><input type="number" id="registroVendasVinculadas" name="registroVendasVinculadas" class="form-input mt-1" min="0" required></div>
+                            <div><label for="registroVendasTotais" class="block text-sm font-medium text-neutral-darker">Qtd Total de Vendas:</label><input type="number" id="registroVendasTotais" name="registroVendasTotais" class="form-input mt-1" min="0" required></div>
+                            <div><label for="registroTotalVendido" class="block text-sm font-medium text-neutral-darker">Total Vendido (R$):</label><input type="number" id="registroTotalVendido" name="registroTotalVendido" class="form-input mt-1" min="0" step="0.01" required></div>
+                            <input type="hidden" id="registroId" name="registroId">
+                            <button type="submit" class="btn btn-primary w-full"><svg class="icon-sm"><use href="#icon-save"></use></svg>Salvar Registro Diário</button>
+                        </form>
+                         <hr class="my-6 border-neutral-medium">
+                        <h4 class="text-lg font-medium text-neutral-darkest mb-3">Registros Recentes (Últimos 20)</h4>
+                        <div id="listaRegistrosDiarios" class="max-h-96 overflow-y-auto space-y-2"><p class="text-center text-neutral-dark p-4">Carregando registros...</p></div>
                     </div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Atendimentos e Vendas Totais por Dia</h4>
-                        <div class="chart-container"><canvas id="chartAtendimentosVendasDia"></canvas></div>
-                    </div>
-                    <div>
-                        <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Total Vendido (R$) por Dia</h4>
-                        <div class="chart-container"><canvas id="chartTotalVendidoDia"></canvas></div>
-                    </div>
-                </div>
-                 <div class="mt-6">
-                    <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Composição das Vendas por Dia (Vinculadas vs. Não Vinculadas)</h4>
-                    <div class="chart-container" style="height: 350px;"><canvas id="chartComposicaoVendasDia"></canvas></div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <div>
-                        <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 1.3: Tabela Detalhada - Dados Diários</h3>
-                        <p class="text-sm text-neutral-dark">Dados do período selecionado</p>
-                    </div>
-                    <button id="exportDashboard1_3" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full table-auto">
-                        <thead><tr><th>Dia</th><th>Qtd Atendimentos</th><th>Vendas Vinculadas (Qtd)</th><th>Qtd Total de Vendas</th><th>Total Vendido (R$)</th><th>Ticket Médio Diário (R$)</th><th>Taxa de Conversão Diária (%)</th></tr></thead>
-                        <tbody id="tabelaDadosDiariosBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="analiseComparativa" class="tab-content">
-             <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Análise Comparativa Mensal e Indicadores de Eficiência</h2>
-            <div class="mb-6 p-4 bg-neutral-lightest border border-neutral-medium rounded-lg md:w-1/2 lg:w-1/3">
-                <label for="filtroLojaAba2" class="block text-sm font-medium text-neutral-darker mb-1">Filtrar por Loja:</label>
-                <select id="filtroLojaAba2" class="form-select"><option value="todas">Todas as Lojas</option></select>
-            </div>
-             <div class="card mb-6">
-                <div class="card-header">
-                    <div>
-                        <h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 2.1: Comparativo de Performance Mensal Chave</h3>
-                        <p class="text-sm text-neutral-dark">Mês Atual (Completo) vs. Mês Anterior (Completo)</p>
-                    </div>
-                     <button id="exportDashboard2_1" class="btn btn-sm btn-secondary"><svg class="icon-sm"><use href="#icon-export"></use></svg>Exportar</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full table-auto">
-                        <thead><tr><th>Indicador</th><th>Mês Atual (Completo)</th><th>Mês Anterior (Completo)</th><th>Crescimento/Variação (Absoluto)</th><th>Crescimento/Variação (%)</th></tr></thead>
-                        <tbody id="comparativoMensalTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card mb-6">
-                <div class="card-header">
-                    <div><h3 class="text-xl font-semibold text-neutral-darkest">Dashboard 2.2: Visualização Gráfica do Comparativo Mensal</h3></div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Faturamento (R$)</h4>
-                        <div class="chart-container"><canvas id="chartComparativoFaturamento"></canvas></div>
-                    </div>
-                    <div>
-                        <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Taxa de Conversão (%)</h4>
-                        <div class="chart-container"><canvas id="chartComparativoConversao"></canvas></div>
-                    </div>
-                    <div class="lg:col-span-2">
-                        <h4 class="text-md font-medium text-neutral-darkest mb-2 text-center">Valor Médio da Venda (Ticket Médio R$)</h4>
-                        <div class="chart-container" style="height: 350px;"><canvas id="chartComparativoTicketMedio"></canvas></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="cadastroConfiguracoes" class="tab-content">
-            <h2 class="text-2xl font-semibold text-neutral-darkest mb-6">Cadastro e Configurações</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold text-neutral-darkest">3.1 Cadastro de Lojas</h3>
-                        <button id="btnNovaLoja" class="btn btn-sm btn-primary"><svg class="icon-sm"><use href="#icon-plus"></use></svg>Nova Loja</button>
-                    </div>
-                    <form id="formCadastroLoja" class="space-y-4">
-                        <div><label for="lojaNome" class="block text-sm font-medium text-neutral-darker">Nome da Loja:</label><input type="text" id="lojaNome" name="lojaNome" class="form-input mt-1" required></div>
-                        <div><label for="lojaRegiao" class="block text-sm font-medium text-neutral-darker">Região/Cidade:</label><input type="text" id="lojaRegiao" name="lojaRegiao" class="form-input mt-1"></div>
-                        <div><label for="lojaGerente" class="block text-sm font-medium text-neutral-darker">Gerente Responsável:</label><input type="text" id="lojaGerente" name="lojaGerente" class="form-input mt-1"></div>
-                        <input type="hidden" id="lojaId" name="lojaId">
-                        <button type="submit" class="btn btn-primary w-full"><svg class="icon-sm"><use href="#icon-save"></use></svg>Salvar Loja</button>
-                    </form>
-                    <hr class="my-6 border-neutral-medium">
-                    <h4 class="text-lg font-medium text-neutral-darkest mb-3">Lojas Cadastradas</h4>
-                    <div id="listaLojas" class="max-h-96 overflow-y-auto space-y-2"><p class="text-center text-neutral-dark p-4">Carregando lojas...</p></div>
-                </div>
-                <div class="card">
-                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold text-neutral-darkest">3.2 Registro de Dados Diários</h3>
-                        <button id="btnNovoRegistro" class="btn btn-sm btn-primary"><svg class="icon-sm"><use href="#icon-plus"></use></svg>Novo Registro</button>
-                    </div>
-                    <form id="formRegistroDiario" class="space-y-4">
-                        <div><label for="registroData" class="block text-sm font-medium text-neutral-darker">Data:</label><input type="date" id="registroData" name="registroData" class="form-input mt-1" required></div>
-                        <div><label for="registroLojaId" class="block text-sm font-medium text-neutral-darker">Loja:</label><select id="registroLojaId" name="registroLojaId" class="form-select mt-1" required><option value="">Selecione uma loja</option></select></div>
-                        <div><label for="registroAtendimentos" class="block text-sm font-medium text-neutral-darker">Qtd Atendimentos:</label><input type="number" id="registroAtendimentos" name="registroAtendimentos" class="form-input mt-1" min="0" required></div>
-                        <div><label for="registroVendasVinculadas" class="block text-sm font-medium text-neutral-darker">Vendas Vinculadas (Qtd):</label><input type="number" id="registroVendasVinculadas" name="registroVendasVinculadas" class="form-input mt-1" min="0" required></div>
-                        <div><label for="registroVendasTotais" class="block text-sm font-medium text-neutral-darker">Qtd Total de Vendas:</label><input type="number" id="registroVendasTotais" name="registroVendasTotais" class="form-input mt-1" min="0" required></div>
-                        <div><label for="registroTotalVendido" class="block text-sm font-medium text-neutral-darker">Total Vendido (R$):</label><input type="number" id="registroTotalVendido" name="registroTotalVendido" class="form-input mt-1" min="0" step="0.01" required></div>
-                        <input type="hidden" id="registroId" name="registroId">
-                        <button type="submit" class="btn btn-primary w-full"><svg class="icon-sm"><use href="#icon-save"></use></svg>Salvar Registro Diário</button>
-                    </form>
-                     <hr class="my-6 border-neutral-medium">
-                    <h4 class="text-lg font-medium text-neutral-darkest mb-3">Registros Recentes (Últimos 20)</h4>
-                    <div id="listaRegistrosDiarios" class="max-h-96 overflow-y-auto space-y-2"><p class="text-center text-neutral-dark p-4">Carregando registros...</p></div>
                 </div>
             </div>
         </div>
@@ -421,7 +487,15 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail,
+            sendEmailVerification,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, query, Timestamp, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Configuração e Inicialização ---
@@ -436,8 +510,6 @@
         };
         const appId = 'painel-lojas-app-prod';
 
-        document.getElementById('appIdDisplay').textContent = appId;
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -446,6 +518,9 @@
         let lojasCache = [];
         let registrosDiariosCache = [];
         let chartInstances = {};
+        let unsubscribeLojas = null;
+        let unsubscribeRegistros = null;
+        let unsubscribeRegistrosRecentes = null;
 
         const HOJE = new Date();
         HOJE.setHours(0,0,0,0);
@@ -455,33 +530,50 @@
         const DATA_FIM_MES_ATUAL = new Date(ANO_ATUAL, MES_ATUAL_NUM + 1, 0);
         const DATA_INICIO_MES_ANTERIOR = new Date(ANO_ATUAL, MES_ATUAL_NUM - 1, 1);
         const DATA_FIM_MES_ANTERIOR = new Date(ANO_ATUAL, MES_ATUAL_NUM, 0);
-
-        document.getElementById('competenciaInfo').textContent = `Competência Analisada: ${DATA_INICIO_MES_ATUAL.toLocaleString('pt-BR', { month: 'long', year: 'numeric' })} vs. ${DATA_INICIO_MES_ANTERIOR.toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}`;
+        
+        const authContainer = document.getElementById('auth-container');
+        const appContainer = document.getElementById('app-container');
+        const emailVerificationContainer = document.getElementById('email-verification-container');
 
         // --- Autenticação ---
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
-                userId = user.uid;
-                document.getElementById('userIdDisplay').textContent = userId;
-                await loadInitialData();
-            } else {
-                try {
-                    await signInAnonymously(auth);
-                } catch (error) {
-                    console.error("Erro na autenticação anónima:", error);
-                    document.getElementById('userIdDisplay').textContent = "Erro de autenticação";
-                    
-                    let friendlyMessage = `Erro de autenticação: ${error.message}`;
-                    if (error.code === 'auth/admin-restricted-operation') {
-                        friendlyMessage = "Erro de configuração: O método de login anónimo não está ativado no seu projeto Firebase. Por favor, aceda à secção 'Authentication' -> 'Sign-in method' na sua consola Firebase e ative a opção 'Anónimo'.";
-                    } else if (error.code === 'auth/api-key-not-valid') {
-                        friendlyMessage = "Erro de configuração: A chave de API do Firebase é inválida. Por favor, verifique se o objeto 'firebaseConfig' no ficheiro index.html está correto.";
-                    }
-                    
-                    showModal(friendlyMessage, 'Erro de Configuração do Firebase');
+                if (user.emailVerified) {
+                    // User is signed in and email is verified
+                    userId = user.uid;
+                    document.getElementById('userEmailDisplay').textContent = user.email;
+                    showApp();
+                    loadInitialData();
+                } else {
+                    // User is signed in but email is not verified
+                    showEmailVerification();
                 }
+            } else {
+                // User is signed out
+                showAuth();
+                cleanupListeners();
+                userId = null;
             }
         });
+
+        // --- Gerenciamento da UI (Auth vs App) ---
+        function showAuth() {
+            authContainer.classList.remove('hidden');
+            appContainer.classList.add('hidden');
+            emailVerificationContainer.classList.add('hidden');
+        }
+
+        function showApp() {
+            authContainer.classList.add('hidden');
+            appContainer.classList.remove('hidden');
+            emailVerificationContainer.classList.add('hidden');
+        }
+
+        function showEmailVerification() {
+            authContainer.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            emailVerificationContainer.classList.remove('hidden');
+        }
 
         // --- Helpers da UI ---
         function showModal(message, title = "Notificação", modalId = 'messageModal') {
@@ -502,7 +594,7 @@
         function showConfirmationModal(message, onConfirm, title = "Confirmar Ação") {
             showModal(message, title, 'confirmationModal');
             const confirmOkButton = document.getElementById('confirmOkButton');
-            const newOkButton = confirmOkButton.cloneNode(true); // Evita múltiplos listeners
+            const newOkButton = confirmOkButton.cloneNode(true);
             confirmOkButton.parentNode.replaceChild(newOkButton, confirmOkButton);
             newOkButton.onclick = () => { onConfirm(); closeModal('confirmationModal'); };
         }
@@ -520,6 +612,74 @@
             document.getElementById(tabName).classList.add("active");
             event.currentTarget.classList.add("active");
         }
+        
+        // --- Handlers de Autenticação ---
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                showModal(`Erro ao fazer login: ${error.message}`, 'Erro');
+            }
+        });
+
+        const registerForm = document.getElementById('register-form');
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await sendEmailVerification(userCredential.user);
+                showModal('Conta criada com sucesso! Enviámos um e-mail de verificação. Por favor, verifique a sua caixa de entrada.');
+                switchAuthView('login-view');
+            } catch (error) {
+                 showModal(`Erro ao registar: ${error.message}`, 'Erro');
+            }
+        });
+        
+        const resetForm = document.getElementById('reset-form');
+        resetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showModal('Link para redefinição de palavra-passe enviado para o seu e-mail.');
+                switchAuthView('login-view');
+            } catch (error) {
+                showModal(`Erro ao enviar e-mail: ${error.message}`, 'Erro');
+            }
+        });
+        
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+        document.getElementById('verification-logout-btn').addEventListener('click', () => signOut(auth));
+
+        document.getElementById('resend-verification-btn').addEventListener('click', async () => {
+            try {
+                if(auth.currentUser){
+                    await sendEmailVerification(auth.currentUser);
+                    showModal('E-mail de verificação reenviado.');
+                }
+            } catch (error) {
+                showModal(`Erro ao reenviar e-mail: ${error.message}`, 'Erro');
+            }
+        });
+        
+        // --- Trocar entre vistas de Autenticação ---
+        const authViews = ['login-view', 'register-view', 'reset-view'];
+        function switchAuthView(viewToShow) {
+            authViews.forEach(viewId => {
+                document.getElementById(viewId).classList.toggle('hidden', viewId !== viewToShow);
+            });
+        }
+        document.getElementById('show-register-view').addEventListener('click', (e) => { e.preventDefault(); switchAuthView('register-view'); });
+        document.getElementById('show-login-view-from-register').addEventListener('click', (e) => { e.preventDefault(); switchAuthView('login-view'); });
+        document.getElementById('show-reset-view').addEventListener('click', (e) => { e.preventDefault(); switchAuthView('reset-view'); });
+        document.getElementById('show-login-view-from-reset').addEventListener('click', (e) => { e.preventDefault(); switchAuthView('login-view'); });
+
 
         // --- Helpers de Formatação ---
         function formatCurrency(value) { return (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
@@ -562,6 +722,8 @@
         // --- Carregamento de Dados e Inicialização ---
         async function loadInitialData() {
             if (!userId) return;
+            cleanupListeners(); // Garante que não há listeners antigos
+            document.getElementById('competenciaInfo').textContent = `Competência Analisada: ${DATA_INICIO_MES_ATUAL.toLocaleString('pt-BR', { month: 'long', year: 'numeric' })} vs. ${DATA_INICIO_MES_ANTERIOR.toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}`;
             setupFiltersAndButtons();
             initializeAllSkeletons();
             await listenToLojas();
@@ -606,6 +768,7 @@
 
         document.getElementById('formCadastroLoja')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!userId) return showModal("Utilizador não autenticado.", "Erro");
             const id = document.getElementById('lojaId').value;
             const data = {
                 nome: document.getElementById('lojaNome').value.trim(),
@@ -614,7 +777,7 @@
             };
             if (!data.nome) return showModal("O nome da loja é obrigatório.", "Erro de Validação");
 
-            const collectionPath = `artifacts/${appId}/public/data/lojas`;
+            const collectionPath = `artifacts/${appId}/users/${userId}/lojas`;
             try {
                 if (id) {
                     await updateDoc(doc(db, collectionPath, id), data);
@@ -628,6 +791,7 @@
 
         document.getElementById('formRegistroDiario')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!userId) return showModal("Utilizador não autenticado.", "Erro");
             const id = document.getElementById('registroId').value;
             const dataInput = document.getElementById('registroData').value;
             if (!dataInput) return showModal("A data do registro é obrigatória.", "Erro de Validação");
@@ -645,7 +809,7 @@
             if (!data.lojaId) return showModal("Selecione uma loja.", "Erro de Validação");
             if (data.vendasVinculadasQtd > data.qtdTotalVendas) return showModal("Vendas vinculadas não podem ser maiores que vendas totais.", "Erro de Validação");
 
-            const collectionPath = `artifacts/${appId}/public/data/registrosDiarios`;
+            const collectionPath = `artifacts/${appId}/users/${userId}/registrosDiarios`;
             try {
                 if (id) {
                     await updateDoc(doc(db, collectionPath, id), data);
@@ -658,30 +822,38 @@
         });
 
         // --- Listeners do Firestore e Renderizadores ---
+        function cleanupListeners() {
+            if (unsubscribeLojas) unsubscribeLojas();
+            if (unsubscribeRegistros) unsubscribeRegistros();
+            if (unsubscribeRegistrosRecentes) unsubscribeRegistrosRecentes();
+        }
+
         async function listenToLojas() {
-            const path = `artifacts/${appId}/public/data/lojas`;
-            onSnapshot(collection(db, path), (snapshot) => {
+            if (!userId) return;
+            const path = `artifacts/${appId}/users/${userId}/lojas`;
+            unsubscribeLojas = onSnapshot(collection(db, path), (snapshot) => {
                 lojasCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderListaLojas();
                 populateLojaFilters();
                 updateAllDashboards();
             }, (error) => {
                 console.error(`Erro ao ouvir lojas em ${path}:`, error);
-                renderListaLojas(); // Limpa a lista em caso de erro
+                renderListaLojas();
             });
         }
 
         async function listenToRegistrosDiarios() {
-            const path = `artifacts/${appId}/public/data/registrosDiarios`;
-            onSnapshot(collection(db, path), (snapshot) => {
+            if (!userId) return;
+            const path = `artifacts/${appId}/users/${userId}/registrosDiarios`;
+            unsubscribeRegistros = onSnapshot(collection(db, path), (snapshot) => {
                 registrosDiariosCache = snapshot.docs.map(d => ({ id: d.id, ...d.data(), data: d.data().data?.toDate() }));
                 updateAllDashboards();
             }, (error) => console.error(`Erro ao ouvir registros em ${path}:`, error));
 
-            onSnapshot(query(collection(db, path), orderBy("data", "desc"), limit(20)), (snapshot) => {
+            unsubscribeRegistrosRecentes = onSnapshot(query(collection(db, path), orderBy("data", "desc"), limit(20)), (snapshot) => {
                 const recentes = snapshot.docs.map(d => ({ id: d.id, ...d.data(), data: d.data().data?.toDate() }));
                 renderListaRegistrosDiarios(recentes);
-            }, (error) => renderListaRegistrosDiarios([])); // Limpa em caso de erro
+            }, (error) => renderListaRegistrosDiarios([]));
         }
 
         function renderListaLojas() {
@@ -717,7 +889,8 @@
         };
         window.confirmDeleteLoja = (id, nome) => showConfirmationModal(`Excluir a loja "${nome}"? A ação não pode ser desfeita.`, () => deleteLoja(id));
         async function deleteLoja(id) {
-            try { await deleteDoc(doc(db, `artifacts/${appId}/public/data/lojas`, id)); showModal("Loja excluída!"); }
+            if (!userId) return;
+            try { await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/lojas`, id)); showModal("Loja excluída!"); }
             catch (error) { showModal(`Erro ao excluir: ${error.message}`, "Erro"); }
         }
 
@@ -767,7 +940,8 @@
         };
         window.confirmDeleteRegistro = (id, data, loja) => showConfirmationModal(`Excluir o registro de ${data} para a loja ${loja}?`, () => deleteRegistro(id));
         async function deleteRegistro(id) {
-            try { await deleteDoc(doc(db, `artifacts/${appId}/public/data/registrosDiarios`, id)); showModal("Registro excluído!"); }
+            if (!userId) return;
+            try { await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/registrosDiarios`, id)); showModal("Registro excluído!"); }
             catch (error) { showModal(`Erro ao excluir: ${error.message}`, "Erro"); }
         }
 
@@ -846,7 +1020,7 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.save();
                 ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#6B7280'; ctx.font = "14px 'Inter'";
-                ctx.fillText('�', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.fillText('📊', canvas.width / 2, canvas.height / 2 - 20);
                 ctx.fillText(noDataMsg, canvas.width / 2, canvas.height / 2 + 10);
                 ctx.restore();
                 return null;
@@ -1249,4 +1423,3 @@
     </script>
 </body>
 </html>
-�
