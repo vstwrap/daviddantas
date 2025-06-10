@@ -425,16 +425,15 @@
         import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, query, Timestamp, orderBy, limit, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Configuração e Inicialização ---
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCiaJO0AUq8rEE-ylly_f6CYQbi1CJ0paY",
-  authDomain: "projeto-david-ecca3.firebaseapp.com",
-  projectId: "projeto-david-ecca3",
-  storageBucket: "projeto-david-ecca3.firebasestorage.app",
-  messagingSenderId: "689418367546",
-  appId: "1:689418367546:web:fd115129521be66cfe3b03",
-  measurementId: "G-RYMC4Y07NH"
-};
+        const firebaseConfig = {
+          apiKey: "AIzaSyCiaJO0AUq8rEE-ylly_f6CYQbi1CJ0paY",
+          authDomain: "projeto-david-ecca3.firebaseapp.com",
+          projectId: "projeto-david-ecca3",
+          storageBucket: "projeto-david-ecca3.appspot.com",
+          messagingSenderId: "689418367546",
+          appId: "1:689418367546:web:8aca2cf7379fa38ffe3b03",
+          measurementId: "G-CQQ4WKV6B9"
+        };
         const appId = 'painel-lojas-app-prod';
 
         document.getElementById('appIdDisplay').textContent = appId;
@@ -469,9 +468,17 @@ const firebaseConfig = {
                 try {
                     await signInAnonymously(auth);
                 } catch (error) {
-                    console.error("Erro na autenticação anônima:", error);
+                    console.error("Erro na autenticação anónima:", error);
                     document.getElementById('userIdDisplay').textContent = "Erro de autenticação";
-                    showModal(`Erro de autenticação: ${error.message}`, 'Erro');
+                    
+                    let friendlyMessage = `Erro de autenticação: ${error.message}`;
+                    if (error.code === 'auth/admin-restricted-operation') {
+                        friendlyMessage = "Erro de configuração: O método de login anónimo não está ativado no seu projeto Firebase. Por favor, aceda à secção 'Authentication' -> 'Sign-in method' na sua consola Firebase e ative a opção 'Anónimo'.";
+                    } else if (error.code === 'auth/api-key-not-valid') {
+                        friendlyMessage = "Erro de configuração: A chave de API do Firebase é inválida. Por favor, verifique se o objeto 'firebaseConfig' no ficheiro index.html está correto.";
+                    }
+                    
+                    showModal(friendlyMessage, 'Erro de Configuração do Firebase');
                 }
             }
         });
@@ -839,7 +846,7 @@ const firebaseConfig = {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.save();
                 ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#6B7280'; ctx.font = "14px 'Inter'";
-                ctx.fillText('📊', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.fillText('�', canvas.width / 2, canvas.height / 2 - 20);
                 ctx.fillText(noDataMsg, canvas.width / 2, canvas.height / 2 + 10);
                 ctx.restore();
                 return null;
@@ -1242,3 +1249,4 @@ const firebaseConfig = {
     </script>
 </body>
 </html>
+�
